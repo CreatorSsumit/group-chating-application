@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+
+
+
+    <div id="right">
+
+
+
+
+        <div style="position: relative;" id="messages">
+
+            <div style="position: fixed; width: 100% ;padding: 4px 6px; min-height: 5%;background-color: #e3e3e3;" id="onlinedetails">
+
+                <h1 style="font-size: 7px;" id="online">2 Peoples Online</h1>
+
+                <h5 style="margin-top: 10px; display: none;" id="h">Online users are :-</h5>
+
+                <h5 style="margin-top: 16px;display: none;" id="onlineid"></h5>
+                <h5 style="font-size: 10px; font-weight: 5600; color: rgb(4, 173, 94);" id="typing"></h5>
+
+            </div>
+
+
+            <div style="margin-top: 90px;text-align: center;background-color: rgb(1, 110, 124);" id="msgs">
+                <h6 id="name" style="margin-bottom: 10px;font-weight: 500;font-size: 8px; "></h6>
+                hello client start your chating !
+
+            </div>
+
+
+
+        </div>
+
+        <div id="formid">
+
+            <input id="inputfield" type="text" placeholder="Enter your words here...">
+            <input id="btn" type="submit" value="Send">
+
+        </div>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener("visibilitychange", function() {
+            console.log("dnjj")
+        })
+    </script>
+
+    <script>
+        var socket = io();
+
+
+        var onlineuser = document.querySelector("#online")
+        var type = document.querySelector("#typing")
+
+        var onlineid = document.querySelector("#onlineid")
+        var btn = document.querySelector("#btn");
+        var datafill = document.querySelector("#inputfield");
+        var mm = document.querySelector("#messages");
+        var name = document.querySelector("#name");
+
+
+
+        btn.addEventListener("click", function() {
+            socket.emit("i", datafill.value);
+            datafill.value = "";
+
+
+
+        })
+
+        datafill.addEventListener("input", function() {
+            socket.emit("typing", "  is Typing");
+        })
+
+        datafill.addEventListener("blur", function() {
+            socket.emit("nottyping");
+
+        })
+
+        socket.on("type", function(e) {
+            document.querySelector("#typing").innerHTML = `  <div style="position: relative;display: flex;" id="messages"><div class="spinner-border spinner-border-sm" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+<div class="spinner-grow spinner-grow-sm" role="status">
+  <span class="sr-only">Loading...</span>
+</div><h5 style="font-size: 10px; font-weight: 5600; color: rgb(78, 78, 78);"  id="typing">${e}</h5>`;
+
+        })
+
+
+        socket.on("nottyping", function(e) {
+            document.querySelector("#typing").innerHTML = " ";
+
+        })
+
+
+
+
+        socket.on("message", function(dd) {
+
+
+            document.querySelector("#typing").innerHTML = `<h5 style="font-size: 10px; font-weight: 5600; color: rgb(78, 78, 78);"  id="typing"></h5>`;
+
+            var inputdata = dd.substring(0, dd.length - 20);
+            var id = dd.substring(dd.length - 20, dd.length);
+
+            if (socket.id === id) {
+
+                mm.innerHTML += `<div style="color: rgb(1, 177, 109);  margin-left: 35%;border-radius: 10px 10px 0px 10px;; font-weight: 500; background-color: #efefef;box-shadow: -2px -2px white,2px 1px 2px 1px #d1d1d1 ;"   id="msgs">
+       <h6 id="name" style="margin-bottom: 8px;font-size: 9px; font-weight: 500;color:grey;">${id}</h6>
+       ${inputdata}
+
+     </div>`
+
+
+            } else {
+                mm.innerHTML += ` <div  id="msgs">
+      <h6 id="name"  style="margin-bottom: 10px;font-size: 9px; font-weight: 500;">${id}</h6>
+      ${inputdata}
+      </div>`
+            }
+
+
+
+
+
+
+        })
+
+        socket.on("online", function(data) {
+
+            onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data} Peoples Online</h1>`
+
+        })
+
+        socket.on("id", function(id) {
+
+
+            onlineid.innerHTML += `<h5 id="onlineid" style="color: rgb(85, 85, 85);display:none;" id="hd">Unique id :-  ${id}</h5>`
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    background-color: #e3e3e3;
+    display: flex;
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    position: fixed;
+}
+
+#right {
+    width: 100%;
+    height: 100%;
+    background-color: #e8e8e8;
+    padding: 10px 0px 30px 10px;
+    position: relative;
+}
+
+#left {
+    width: 25%;
+    height: 100%;
+    padding: 10px;
+    background-color: #e4e4e4;
+}
+
+#messages {
+    width: 100%;
+    height: 88%;
+    padding: 10px;
+    background-color: transparent;
+    overflow: auto;
+}
+
+#msgs {
+    width: 60%;
+    min-height: 6%;
+    background-color: rgb(0, 184, 129);
+    padding: 10px 9px 5px 9px;
+    font-size: 11px;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    margin-top: 10px;
+    border-radius: 0px 10px 10px 10px;
+}
+
+#inputfield::placeholder {
+    color: rgb(212, 212, 212);
+    font-size: 15px;
+}
+
+#left h3 {
+    margin-top: 15px;
+    margin-left: 15px;
+    font-size: 15px;
+    color: rgb(80, 80, 80);
+}
+
+#left h6 {
+    margin-top: 1px;
+    margin-left: 9px;
+    font-size: 11px;
+    color: rgb(0, 184, 129);
+}
+
+#left h5 {
+    margin-top: 1px;
+    margin-left: 16px;
+    font-size: 12px;
+    color: rgb(114, 114, 114);
+}
+
+#left hr {
+    margin-top: 8px;
+}
+
+#formid {
+    width: 100%;
+    height: 10%;
+    position: relative;
+    background-color: transparent;
+    margin-bottom: 100px;
+    color: white;
+    border: none;
+}
+
+#inputfield {
+    width: 95%;
+    height: 100%;
+    background-color: rgb(158, 158, 158);
+    border-radius: 9px 10px 10px 9px;
+    outline: none;
+    border: none;
+    padding: 10px;
+    color: white;
+}
+
+#btn {
+    padding: 5px;
+    background-color: rgb(0, 184, 129);
+    color: white;
+    position: absolute;
+    right: 0%;
+    top: 24%;
+    width: 70px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+
+#onlineid {
+    color: rgb(126, 126, 126);
+}
