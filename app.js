@@ -17,15 +17,34 @@ var onlineuser = 0;
 
 socketio.on("connection", function(socket) {
     ++onlineuser;
-    socketio.emit("id", socket.id)
 
-    socketio.emit("online", onlineuser)
+    if (onlineuser === 1) {
+        socketio.emit("online", "No Buddy is there except You")
+
+    } else {
+        socketio.emit("online", onlineuser)
+        socketio.emit("id", socket.id)
+    }
+
+
+
+
 
     socket.on("disconnect", function() {
         --onlineuser;
 
+        if (onlineuser === 1) {
+            socketio.emit("online", "No Buddy is there except You")
 
-        socketio.emit("online", onlineuser)
+        } else {
+            socketio.emit("online", onlineuser)
+            socketio.emit("id", socket.id)
+        }
+
+
+
+
+
 
     })
 

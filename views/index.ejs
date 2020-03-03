@@ -73,6 +73,10 @@
         var btn = document.querySelector("#btn");
         var datafill = document.querySelector("#inputfield");
         var mm = document.querySelector("#messages");
+
+
+
+
         var name = document.querySelector("#name");
 
 
@@ -80,6 +84,8 @@
         btn.addEventListener("click", function() {
             socket.emit("i", datafill.value);
             datafill.value = "";
+
+
 
 
 
@@ -130,6 +136,8 @@
      </div>`
 
 
+
+
             } else {
                 mm.innerHTML += ` <div  id="msgs">
       <h6 id="name"  style="margin-bottom: 10px;font-size: 9px; font-weight: 500;">${id}</h6>
@@ -140,13 +148,18 @@
 
 
 
-
-
         })
 
         socket.on("online", function(data) {
 
-            onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data} Peoples Online</h1>`
+            if (data === "No Buddy is there except You") {
+                onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data}</h1>`
+
+            } else {
+                onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data} Peoples Online</h1>`
+            }
+
+
 
         })
 
