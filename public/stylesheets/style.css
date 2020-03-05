@@ -99,7 +99,7 @@ body {
     width: 95%;
     height: 100%;
     background-color: #a1a1a1;
-    border-radius: 9px 10px 10px 9px;
+    border-radius: 2px;
     outline: none;
     border: none;
     padding: 10px;
@@ -112,9 +112,9 @@ body {
     color: white;
     position: absolute;
     right: 0%;
-    top: 24%;
     width: 70px;
-    border-radius: 20px;
+    height: 60px;
+    border-radius: 2px;
     border: none;
     outline: none;
 }

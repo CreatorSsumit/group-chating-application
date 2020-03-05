@@ -29,29 +29,20 @@
 
         <div id="fill" style="width: 97%;opacity: 0; ;height: 100%;background-image: url(https://images.unsplash.com/photo-1516961642265-531546e84af2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80);background-size: cover;background-position: center;">
 
-            <form method="POST" action="/username" id="fillform" style="position: absolute;top: 30%;left: 10%;padding: 17px;background-color: #f5f5f5;">
+            <form action="#" id="fillform" style="position: absolute;top: 30%;left: 10%;padding: 17px;background-color: #f5f5f5;">
                 <div class="form-group">
                     <label style="color:rgb(110, 110, 110);font-weight: 600;font-size: 15px; " for="exampleInputEmail1">Give Username</label>
-                    <input id="username" name="name" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter your name">
+                    <input id="username" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter your name">
                     <small id="emailHelp" class="form-text text-muted">Give your original name to chat anyone.</small>
                 </div>
 
                 <button id="button" type="submit" style="width: 100%;" class="btn btn-primary">Submit</button>
             </form>
-
-
-
-
         </div>
 
 
 
-
-
-
-
-
-        <div style="position: relative;display: none; " id="messages">
+        <div style="position: relative;opacity: 0; " id="messages">
 
             <div style="position: fixed; width: 100% ;padding: 4px 6px; min-height: 5%;background-color: #e3e3e3;" id="onlinedetails">
 
@@ -76,9 +67,9 @@
 
         </div>
 
-        <div style="display: none;" id="formid">
+        <div style="opacity: 0;" id="formid">
 
-            <input id="inputfield" type="text" placeholder="Enter your words here...">
+            <input style="width:80%" id="inputfield" type="text" placeholder="Enter your words here...">
             <input id="btn" type="submit" value="Send">
 
         </div>
@@ -100,7 +91,22 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
 
+
+
     <script>
+        var socket = io();
+
+
+        var onlineuser = document.querySelector("#online")
+        var type = document.querySelector("#typing")
+
+        var onlineid = document.querySelector("#onlineid")
+        var btn = document.querySelector("#btn");
+        var datafill = document.querySelector("#inputfield");
+        var mm = document.querySelector("#messages");
+
+
+
         var t1 = new TimelineMax();
         t1.fromTo("#fill", 3, {
             height: 0,
@@ -146,6 +152,67 @@
         }
 
 
+        button.addEventListener("click", function() {
+            var username = document.querySelector("#username")
+
+
+
+            socket.emit("username", username.value);
+
+
+            t1.fromTo("#fill", 3, {
+                height: "100%",
+                opacity: 1,
+
+                ease: Expo.easeOut
+
+            }, {
+
+                height: 0,
+                opacity: 0,
+
+                ease: Expo.easeInOut
+
+
+            }).fromTo("#fillform", 1, {
+
+
+                width: "80%",
+                opacity: 1,
+                top: "30%",
+                left: "10%",
+                ease: Expo.easeInOut
+
+
+
+            }, {
+                opacity: 0,
+                top: 0,
+                ease: Expo.easeInOut
+            }, ).fromTo("#messages", 0.1, {
+
+                opacity: 0,
+                ease: Expo.easeInOut
+
+
+
+            }, {
+
+                opacity: 1,
+                ease: Expo.easeInOut
+            }, -"0.1").fromTo("#formid", 0, {
+                opacity: 0,
+
+                ease: Expo.easeInOut
+            }, {
+                opacity: 1,
+
+                ease: Expo.easeInOut
+            }, -"0.3")
+
+        })
+
+
         username.addEventListener("input", function() {
             var vvv = username.value;
             if (vvv.length === 0) {
@@ -154,35 +221,7 @@
             } else {
                 button.removeAttribute("disabled")
             }
-
-
-
         })
-
-
-
-
-
-        button.addEventListener("click", function() {
-
-        })
-    </script>
-
-
-
-    <script>
-        var socket = io();
-
-
-        var onlineuser = document.querySelector("#online")
-        var type = document.querySelector("#typing")
-
-        var onlineid = document.querySelector("#onlineid")
-        var btn = document.querySelector("#btn");
-        var datafill = document.querySelector("#inputfield");
-        var mm = document.querySelector("#messages");
-
-
 
 
         var name = document.querySelector("#name");
@@ -192,11 +231,6 @@
         btn.addEventListener("click", function() {
             socket.emit("i", datafill.value);
             datafill.value = "";
-
-
-
-
-
         })
 
         datafill.addEventListener("input", function() {
@@ -229,17 +263,17 @@
 
         socket.on("message", function(dd) {
 
+            //substring(0,20)
+
 
             document.querySelector("#typing").innerHTML = `<h5 style="font-size: 10px; font-weight: 5600; color: rgb(78, 78, 78);"  id="typing"></h5>`;
 
-            var inputdata = dd.substring(0, dd.length - 20);
-            var id = dd.substring(dd.length - 20, dd.length);
 
-            if (socket.id === id) {
+            if (socket.id === dd.id) {
 
                 mm.innerHTML += `<div style="color: rgb(1, 177, 109); font-size:12px;  margin-left: 35%;border-radius: 10px 10px 0px 10px;; font-weight: 500; background-color: #efefef;box-shadow: -2px -2px white,2px 1px 2px 1px #d1d1d1 ;"   id="msgs">
-       <h6 id="name" style="margin-bottom: 8px;font-size: 9px; font-weight: 500;color:grey;">${id}</h6>
-       ${inputdata}
+       <h6 id="name" style="margin-bottom: 8px;font-size: 9px; font-weight: 500;color:grey;">${dd.username}</h6>
+       ${dd.msg}
 
      </div>`
 
@@ -248,8 +282,8 @@
 
             } else {
                 mm.innerHTML += ` <div  id="msgs">
-      <h6 id="name"  style="margin-bottom: 10px;font-size: 9px; font-weight: 500;">${id}</h6>
-      ${inputdata}
+      <h6 id="name"  style="margin-bottom: 10px;font-size: 9px; font-weight: 500;">${dd.username}</h6>
+      ${dd.msg}
       </div>`
             }
 
@@ -260,8 +294,8 @@
 
         socket.on("online", function(data) {
 
-            if (data === "No Buddy is there except You") {
-                onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data}</h1>`
+            if (data.data === "No Buddy is there except You") {
+                onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data.data}</h1>`
 
             } else {
                 onlineuser.innerHTML = ` <h1 style="font-size: 14px;margin:10px; " id="online">${data} Peoples Online</h1>`

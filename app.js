@@ -15,26 +15,18 @@ app.socketio = socketio;
 
 var onlineuser = 0;
 
+
 socketio.on("connection", function(socket) {
-    ++onlineuser;
-
-    if (onlineuser === 1) {
-        socketio.emit("online", "No Buddy is there except You")
-
-    } else {
-        socketio.emit("online", onlineuser)
-        socketio.emit("id", socket.id)
-    }
 
 
+    var stack = [];
+    socket.on("username", function(usernamevalue) {
+        ++onlineuser;
 
 
-
-    socket.on("disconnect", function() {
-        --onlineuser;
 
         if (onlineuser === 1) {
-            socketio.emit("online", "No Buddy is there except You")
+            socketio.emit("online", { data: "No Buddy is there except You", username: usernamevalue })
 
         } else {
             socketio.emit("online", onlineuser)
@@ -42,26 +34,33 @@ socketio.on("connection", function(socket) {
         }
 
 
+        socket.on("i", function(dd) {
+            socketio.emit("message", { msg: dd, id: socket.id, username: usernamevalue })
+
+        })
 
 
+        socket.on("typing", function(e) {
+            socket.broadcast.emit("type", usernamevalue + e)
 
+        })
+
+        socket.on("nottyping", function(e) {
+            socket.broadcast.emit("nottyping")
+        })
+        socket.on("disconnect", function() {
+            --onlineuser;
+
+            if (onlineuser === 1) {
+                socketio.emit("online", { data: "No Buddy is there except You", username: usernamevalue })
+
+            } else {
+                socketio.emit("online", onlineuser)
+                socketio.emit("id", socket.id)
+            }
+        })
 
     })
-
-    socket.on("i", function(dd) {
-        socketio.emit("message", dd + socket.id)
-
-    })
-
-    socket.on("typing", function(e) {
-        socket.broadcast.emit("type", socket.id + e)
-
-    })
-
-    socket.on("nottyping", function(e) {
-        socket.broadcast.emit("nottyping")
-    })
-
 
 })
 
