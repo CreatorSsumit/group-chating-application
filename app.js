@@ -21,13 +21,7 @@ socketio.on("connection", function(socket) {
 
     var stack = [];
     socket.on("username", function(usernamevalue) {
-
         onlineuser.push(usernamevalue);
-
-        console.log(onlineuser.length)
-
-
-
 
 
 
