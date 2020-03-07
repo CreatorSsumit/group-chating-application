@@ -13,23 +13,29 @@ var app = express();
 var socketio = io();
 app.socketio = socketio;
 
-var onlineuser = 0;
 
+
+var onlineuser = []
 
 socketio.on("connection", function(socket) {
 
-
     var stack = [];
     socket.on("username", function(usernamevalue) {
-        ++onlineuser;
+
+        onlineuser.push(usernamevalue);
+
+        console.log(onlineuser.length)
 
 
 
-        if (onlineuser === 1) {
+
+
+
+        if (onlineuser.length === 1) {
             socketio.emit("online", { data: "No Buddy is there except You", username: usernamevalue })
 
         } else {
-            socketio.emit("online", onlineuser)
+            socketio.emit("online", onlineuser.length)
             socketio.emit("id", socket.id)
         }
 
@@ -49,13 +55,13 @@ socketio.on("connection", function(socket) {
             socket.broadcast.emit("nottyping")
         })
         socket.on("disconnect", function() {
-            --onlineuser;
+            onlineuser.pop();
 
-            if (onlineuser === 1) {
+            if (onlineuser.length === 1) {
                 socketio.emit("online", { data: "No Buddy is there except You", username: usernamevalue })
 
             } else {
-                socketio.emit("online", onlineuser)
+                socketio.emit("online", onlineuser.length)
                 socketio.emit("id", socket.id)
             }
         })
